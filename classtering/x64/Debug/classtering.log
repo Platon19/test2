@@ -1,0 +1,4 @@
+﻿  classtering.cpp
+C:\Users\tanya\Documents\test2\classtering\classtering.cpp(140,13): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+C:\Users\tanya\Documents\test2\classtering\classtering.cpp(144,10): warning C4101: mas_centr: неиспользованная локальная переменная
+  classtering.vcxproj -> C:\Users\tanya\Documents\test2\classtering\x64\Debug\classtering.exe
