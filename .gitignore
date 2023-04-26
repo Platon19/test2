@@ -1,1 +1,5 @@
-.\test.py
+*.aux
+*.fdb_latexmk
+*.fls
+*.gz
+*.log
