@@ -1,0 +1,177 @@
+\documentclass{beamer}
+\usepackage[russian]{babel}
+\usepackage{ucs}
+\usepackage[T2A]{fontenc}
+\usepackage{mathtools}
+\setbeamertemplate{footline}[frame number]
+\usetheme{Goettingen}
+\usecolortheme{whale}
+\usepackage{graphicx}%Вставка картинок правильная
+
+\usepackage{float}%"Плавающие" картинки
+
+\usepackage{wrapfig}%Обтекание фигур (таблиц, картинок и прочего)
+
+%\usepackage[utf8x]{inputenc}
+
+
+\title[Линейное афинное многообразие]{\textbf{Линейное афинное многообразие}}
+%\subtitle{Subtitle}
+
+\author{Гвоздев П.А ФН1-21Б}
+
+\date{24 мая 2023 г.} 
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+
+\begin{frame}{\textbf{Цели и задачи}}
+\begin{block}{Цели:}
+\begin{enumerate}
+    \item Изучить LaTeX и сделать в нём презентацию.
+    \item Повторить теорию по теме "Линейное афинное многообразие".
+\end{enumerate}
+\end{block}
+\begin{block}{Задачи:}
+\begin{enumerate}
+    \item Применение знаний линейной алгебры на практике.
+    \item Изучение принципов работы в LaTeX.
+    \item Изучение синтаксиса и основных команд LaTeX.
+\end{enumerate}
+\end{block}
+\begin{block}{Индивидуальное задание:}
+    Линейное аффинное многообразие. Вектор сдвига. Пересечение линейного аффинного многообразия с подпространством, дополнительным к его направляющему подпространству.
+\end{block}
+\end{frame}
+
+
+
+
+\begin{frame}{\textbf{Основные понятия}}
+
+\begin{block}{Определение}
+Пусть $\mathbf{V}$ произвольное линейное пространство\\
+над полем $\mathfrak{K}$ и $\mathbf{H}=x_0+\mathbf{L}$-смежный класс по подпространству $\mathbf{L}\subset \mathbf{V}$ ($x_0$-фиксированный  вектор из $\mathbf{V}$). Говорят, что $\mathbf{H}$-линейное афинное многообразие пространства $\mathbf{V}$.
+\end{block}
+
+\begin{block}{Замечание}
+Подпространство $\mathbf{L}$ называют направляющим подпространством,
+а вектор $x_0$-вектором сдвига.
+\end{block}
+
+
+\end{frame}
+
+
+\begin{frame}{\textbf{Основные понятия}}
+
+\begin{block}{Определение}
+Размерностью $\mathbf{H}$ называется размерность соответствующего направляющего подпространства $\mathbf{L}$.
+\end{block}
+\begin{block}{Замечание}
+Вектор сдвига определён неоднозначно.
+\end{block}
+\begin{block}{Примеры}
+
+\begin{itemize}
+\item Если $\dim(H)=0$ - то $\mathbf{H}$ называется, естественно, точкой 
+\item При $\dim(H)=1$ - прямой
+\item При $\dim(H)=\dim(\mathbf{V})-1$, $\mathbf{H}$ называется гиперплоскостью
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}{\textbf{Некоторые следствия из алгебры}}
+
+
+\begin{block}{Следствие 1}
+Пусть \mathbf{V}-линейное пространство, $\mathbf{L}\subset \mathbf{V}$- его подпространство. Тогда \mathbf{V} распадается на непересекающиеся линейный афинные многообразия с направляющим подпространством $\mathbf{L}$.
+\end{block}
+
+
+\begin{block}{Следствие 2}
+ Так как ($\mathbf{V}$,+) является абелевой группой, то любая подгруппа нормальная, и можно определеить структуру фактор-группы
+ $\mathbf{V}/\mathsf{L}=$\{$\mathsf{L},\mathbf{x_1}+\mathsf{L},\mathbf{x_2}+\mathsf{L},..,\mathbf{x_n}+\mathsf{L},..$\} с бинарной операцией $\mathbf{a}+\mathsf{L}\circ \mathbf{b}+\mathsf{L}=(\mathbf{a}+\mathbf{b})+\mathsf{L}$. Очевидно, введённая операция не будет зависеть от выбора представителей в классах. Таким образом можно ввести операцию сложения линейных афинных многообразий с одним и тем же направляющим подпространством.
+\end{block}
+
+
+\end{frame}
+
+
+\begin{frame}{\textbf{Некоторые следствия из алгебры}}
+\begin{figure}[h]
+
+\centering
+
+\includegraphics[width=0.8\linewidth]{image.png}
+
+%\caption{Иллюстрация к следствию 2}
+
+Иллюстрация к следствию 2
+\label{fig:mpr}
+
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{\textbf{Ещё немного теории}}
+\begin{block}{Определение}
+    Два многообразия $\mathbf{H_1}=a+\mathbf{L_1}$ и $\mathbf{H_2}=b+\mathbf{L_2}$ называютя параллельными, если $\mathbf{L_1} \subset \mathbf{L_2}$ или $\mathbf{L_2} \subset \mathbf{L_2}$.
+\end{block}
+\begin{block}{Теорема}
+    Если 2 параллельных многообразия пересекаются, то 1 из них содержит другое.
+\end{block}
+\begin{block}{Доказательство:}
+Пусть $x_0\in\mathbf{H_1}\cap\mathbf{H_2}$. Тогда $\mathbf{H_1}=x_0+\mathbf{L_1}$ и $\mathbf{H_2}=x_0+\mathbf{L_2}$. Пусть $\mathbf{L_1} \subset \mathbf{L_2}$, тогда $\mathbf{H_2}=x_0+\mathbf{L_1}+(\mathbf{L_2}\setminus \mathbf{L_1})=\mathbf{H_1}+\mathbf{L_1}^\delta
+\Rightarrow \mathbf{H_1} \subset \mathbf{H_2}$.
+\end{block}
+\end{frame}
+
+
+\begin{frame}{\bfПересечение ЛАМ с подпространством, дополнительным к направляющему подпространству}
+
+\begin{block}{Определение}
+    $\mathbf{L}^\delta$ называется прямым дополнением $\mathbf{L}$ до $\mathbf{V}$, если $\mathbf{L}\oplus \mathbf{L}^\delta=\mathbf{V}$.
+\end{block}
+
+\begin{block}{Змаечание}
+    Однозначно определена только $\dim\mathbf{L}^\delta$.
+\end{block}
+
+\begin{block}{Теорема}
+ Пересечение линейного многообразия с подпространством, дополнительным к его направляющему подпространству состоит ровно из 1 вектора.   
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}{\bfПересечение ЛАМ с подпространством, дополнительным к направляющему подпространству}
+\begin{block}{Доказательство}
+    Пусть $\mathbf{V}=\mathbf{L}\oplus \mathbf{L}^\delta$, $\mathbf{H}=\mathbf{x_0}+\mathbf{L}$. Тогда $\forall\:\mathbf{x} \in \mathbf{V},    \mathbf{x}=\mathbf{y}+\mathbf{z}$, где $\mathbf{y}\in\mathbf{L}$, $\mathbf{z}\in\mathbf{L}^\delta$.
+    Следовательно, $\exists\:\mathbf{y_0}\in\mathbf{L}$ и $\exists\:\mathbf{z_0}\in\mathbf{L}^\delta:\mathbf{x_0}=\mathbf{y_0}+\mathbf{z_0}\Rightarrow\mathbf{z_0}=\mathbf{x_0}+(-\mathbf{y_0})$. Очевидно, $\mathbf{z_0}\in\mathbf{H}\cap\mathbf{L}^\delta$, тогда остаётся доказать единственность. Допустим противоположное, $\exists\: \mathbf{t_0}\neq\mathbf{z_0}:\mathbf{t_0}\in\mathbf{H}\cap\mathbf{L}^\delta$ . Выберем другого представителя класса сопряжённости, то есть $\mathbf{z_0}+\mathbf{L}=\mathbf{x_0}+(-\mathbf{y_0})+\mathbf{L}=\mathbf{x_0}+\mathbf{L}=\mathbf{H}$.
+    Тогда
+    $\exists\:\mathbf{\ell }\in\mathbf{L}:\mathbf{t_0}=\mathbf{z_0}+\mathbf{\ell }\Rightarrow \mathbf{\ell}=\mathbf{t_0 }-\mathbf{z_0}\in\mathbf{L}^\delta$.Очевидно, что $\mathbf{\ell }=\theta\Rightarrow\mathbf{t_0}=\mathbf{z_0}$-противоречие.
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}{Список литературы}
+  
+    [1]А.Н. Канатников, А.П. Крищенко. {\bf Линейная алгебра}, ред. В.С. Зарубин, А.П. Крищенко
+    - 3-е издание, изд. МГТУ им. Н.Э. Баумана, 2002.
+    
+    [2]А.И. Кострикин {\bf Введение в алгебру, Ч. II: Линейная алгебра}- Четвёртое издание, стереотип. - М.:МЦНМО, 2021.
+\end{frame}
+
+\end{document}
