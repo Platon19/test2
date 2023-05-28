@@ -9,10 +9,125 @@
 
 \begin{document}
 \maketitle
+\documentclass{article}
+\usepackage{ucs}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\author{Гвоздев П.А.}
+\title{SciPy}
+\date{27 Мая 2023}
 
-\begin{
-\begin{list}{label}{spacing}
- \int_{}^{+\infty }  \,dx 
-    
-\end{list}
+
+
+\usepackage{xcolor}
+
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour}, commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+  }
+  \lstset{style=mystyle}
+
+
+\begin{document}
+\maketitle
+\newpage
+SciPy - это набор математических алгоритмов и удобных функций, построенный на расширении Python NumPy.\\
+SciPy организован в подпакеты, охватывающие различные области научных вычислений. Они обобщены в следующей таблице:
+\\
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ \textbf{Подпакет} & \textbf{Описание}  \\
+ \hline
+ \hline
+ cluster & Алгоритмы кластеризации  \\ 
+  \hline
+ constants & Физические и математические константы  \\ 
+  \hline
+ fftpack &  Процедуры быстрого преобразования Фурье \\ 
+  \hline
+ integrate & Решатели интегрирования и обыкновенных дифференциальных уравнений  \\ 
+  \hline
+ interpolate & Интерполяция и сглаживание сплайнов  \\ 
+  \hline
+ io & Ввод и вывод  \\ 
+  \hline
+ linalg & Линейная алгебра \\ 
+  \hline
+ ndimage & Обработка N-мерных изображений \\ 
+  \hline
+ odr & Регрессия ортогонального расстояния  \\ 
+  \hline
+ optimize & Процедуры оптимизации и поиска корня  \\ 
+  \hline
+ signal & Обработка сигналов  \\ 
+  \hline
+ sparse & Разреженные матрицы и связанные с ними подпрограммы  \\ 
+  \hline
+ spatial & Пространственные структуры данных и алгоритмы  \\ 
+  \hline
+ special & Специальные функции  \\ 
+  \hline
+ stats & Статистические распределения и функции \\ 
+ \hline
+\end{tabular}
+\end{center}
+\\
+Далее рассмотрим некоторые из них.
+\begin{section}{Integrate}
+Подпакет предоставляет несколько методов интегрирования, включая интегратор обыкновенных дифференциальных уравнений. Возвращаемое значение большинства функций представляет собой кортеж, в котором первый элемент содержит оценочное значение интеграла, а второй элемент содержит верхнюю границу ошибки.\\
+Функция quad предназначена для интеграции функции одной переменной на заданном отрезке. Например, предположим, что вы хотите вычислить вот такой интеграл.
+\begin{align*}
+I(a,b)=\int_{0}^{1} ax^2+b \,dx
+\end{align*}  
+\\Вычислим значение этой функции в точке (2 ; 1).
+\begin{lstlisting}[language=Python]
+from scipy.integrate import quad
+def integrand(x, a, b):
+    return a*x**2 + b
+a = 2
+b = 1
+I = quad(integrand, 0, 1,args=(a,b))
+I
+>>(1.6666666666666667, 1.8503717077085944e-14)
+\end{lstlisting}
+Механизмы взятия двойных и тройных интегралов были объединены в функции dblquad и tplquad. Эти функции используют функцию для интегрирования и четыре или шесть аргументов соответственно. Пределы всех внутренних интегралов должны быть определены как функции.
+В качестве примера для непостоянных пределов рассмотрим интеграл
+\begin{align*}
+I=\int_{0}^{1}\,dy\int_{1-3y}^{1+2y} x^2y \,dx  
+\end{align*}
+\end{section}
+ Его можно вычислить так:
+ \\
+ \begin{lstlisting}[language=Python]
+from scipy.integrate import dblquad
+I = dblquad(lambda x, y: x**2*y, 0, 1, lambda y: 1-3*y, lambda y : 1+2*y)
+I
+>>(2.75, 1.2852467283249305e-13)
+\end{lstlisting}
+\end{document}
+
+
 \end{document}

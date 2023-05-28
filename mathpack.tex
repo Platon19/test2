@@ -5,9 +5,10 @@
 \usepackage[russian, english]{babel}
 \usepackage{listings}
 \usepackage{graphicx}
+\usepackage{amsmath}
 \author{Гвоздев П.А.}
-\title{Отчёт по графикам}
-\date{23 Мая 2023}
+\title{SciPy}
+\date{27 Мая 2023}
 
 
 
@@ -40,237 +41,205 @@
 
 \begin{document}
 \maketitle
-
 \newpage
-\begin{section}{Задача}\\
-
-Вычислить площадь фигуры, которая расположена на плоскости $Oxy.\: 
-\\D: y=\arctan(x), y=\arctan(2x-4), y=0$.\\
-
+SciPy - это набор математических алгоритмов и удобных функций, построенный на библиотеке NumPy.\\
+SciPy организован в подпакеты, охватывающие различные области научных вычислений. Они обобщены в следующей таблице:
+\\
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ \textbf{Подпакет} & \textbf{Описание}  \\
+ \hline
+ \hline
+ cluster & Алгоритмы кластеризации  \\ 
+  \hline
+ constants & Физические и математические константы  \\ 
+  \hline
+ fftpack &  Процедуры быстрого преобразования Фурье \\ 
+  \hline
+ integrate & Решатели интегрирования и обыкновенных дифференциальных уравнений  \\ 
+  \hline
+ interpolate & Интерполяция и сглаживание сплайнов  \\ 
+  \hline
+ io & Ввод и вывод  \\ 
+  \hline
+ linalg & Линейная алгебра \\ 
+  \hline
+ ndimage & Обработка N-мерных изображений \\ 
+  \hline
+ odr & Регрессия ортогонального расстояния  \\ 
+  \hline
+ optimize & Процедуры оптимизации и поиска корня  \\ 
+  \hline
+ signal & Обработка сигналов  \\ 
+  \hline
+ sparse & Разреженные матрицы и связанные с ними подпрограммы  \\ 
+  \hline
+ spatial & Пространственные структуры данных и алгоритмы  \\ 
+  \hline
+ special & Специальные функции  \\ 
+  \hline
+ stats & Статистические распределения и функции \\ 
+ \hline
+\end{tabular}
+\end{center}
+\\
+Далее рассмотрим некоторые из них.
+\begin{section}{Интегральные функции}
+Подпакет предоставляет несколько методов интегрирования, включая интегратор обыкновенных дифференциальных уравнений. Возвращаемое значение большинства функций представляет собой кортеж, в котором первый элемент содержит оценочное значение интеграла, а второй элемент содержит верхнюю границу ошибки.
+\newpage
+Функция \textbf{quad} предназначена для интеграции функции одной переменной на заданном отрезке. Например, предположим, что вы хотите вычислить вот такой интеграл.
+\begin{align*}
+I(a,b)=\int_{0}^{1} ax^2+b \,dx
+\end{align*}  
+\\Вычислим значение этой функции в точке (2 ; 1).
 \begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-x=np.linspace(-10,10,1000)
-y=np.arctan(x)
-y1=np.arctan(2*x-4)
+from scipy.integrate import quad
+def integrand(x, a, b):
+    return a*x**2 + b
+a = 2
+b = 1
+I = quad(integrand, 0, 1,args=(a,b))
+I
 
-area=np.linspace(0,4,1000)
-y_area_top=np.arctan(area)
-y_area_low=np.arctan(2*area-4)
-plt.fill_between(area,y_area_top,y_area_low,color='orange')
-
-plt.plot(x,y,color='red',lw=2, ls='solid',label=r'$y=\arctan(x)$')
-plt.plot(x,y1,lw=2,label=r'$y=\arctan(2x-4)$',color='blue')
-
-plt.text(1.1,0.3,"D", fontsize=12)
-plt.xlim(0,5)
-plt.grid()
-plt.legend(loc=0, prop={'size':12})
-plt.title('1')
-plt.xlabel('x')
-plt.ylabel('y')
+>>(1.6666666666666667, 1.8503717077085944e-14)
 \end{lstlisting}
-
-
-\end{section}
-
 \\
-   
-
-\includegraphics[width=0.8\linewidth]{graphic1.png}
-
-%\caption{Иллюстрация к следствию 2}
-
-
-
-
-
-\newpage
-\begin{section}{Задача}\\
-
-Фигура, расположенная вплоскости $Oxy$, вращается около координатной оси.
-Вычислить объём полученного тела вращения. \\
-$D:\: x=\sqrt{6-y},\: y \geq 2;\: x=4-\sqrt{2y},\:y \leq 2$.
 \\
-\begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-y=np.linspace(2,6,1000)
-x=np.sqrt(6-y)
-plt.fill_between(x,0,y,color='green')
-plt.plot(x,y,color='blue',lw=2,label=r'$x=\sqrt{6-y}, y \geq 2$')
-y1=np.linspace(0,2,1000)
-x1=4-np.sqrt(2*y1)
-plt.plot(x1,y1,color='red',lw=2,label=r'$x=4-\sqrt{2y}, y \leq 2$')
-plt.fill_between(x1,0,y1,color='green')
+Механизмы взятия двойных и тройных интегралов были объединены в функции \textbf{dblquad} и \textbf{tplquad}. Эти функции используют функцию для интегрирования и четыре или шесть аргументов соответственно. Пределы всех внутренних интегралов должны быть определены как функции.
+В качестве примера для непостоянных пределов рассмотрим интеграл\\
+\begin{align*}
+I=\int_{0}^{1}\,dy\int_{1-3y}^{1+2y} x^2y \,dx  
+\end{align*}
 
+ Его можно вычислить так:
+ \\
+ \begin{lstlisting}[language=Python]
+from scipy.integrate import dblquad
+I = dblquad(lambda x, y: x**2*y, 0, 1, lambda y: 1-3*y, lambda y : 1+2*y)
+I
 
-plt.text(1.2,2.2,"D", fontsize=12)
-plt.xlim(0,5)
-plt.grid()
-plt.title('2')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.legend(loc=1, prop={'size':12})
+>>(2.75, 1.2852467283249305e-13)
 \end{lstlisting}
-
-
 \end{section}
+\begin{section}{Интерполяция}
 
+
+В SciPy доступно несколько общих возможностей для интерполяции и сглаживания данных в 1, 2 и более высоких измерениях. Выбор конкретной процедуры интерполяции зависит от данных: являются ли они одномерными, представлены в структурированной сетке или неструктурированными. Еще одним фактором является желаемая плавность интерполятора.
 \\
-\includegraphics[width=0.8\linewidth]{graphic2.png}
-
-%\caption{Иллюстрация к следствию 2}
-
-
-
-
-
-\newpage
-\begin{section}{Задача}\\
-
-Вычислить площадь фигуры. Внутри кардиоиды $r=1-\cos(\varphi)$ и одновременно внутри окружности $r=3\cos(\varphi)$.
+Если все, что вам нужно, это линейная (или прерывистая линия) интерполяция, вы можете использовать процедуру \textbf{numpy.interp} Для интерполяции требуется два массива данных, $x$ и $y$, и третий массив точек, $xnew$ для оценки интерполяции.
 \\
 \begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-fi=np.linspace(0,2*np.pi,1000)
-r=1+np.cos(fi)
-plt.polar(fi,r,color='red',label=r'$r=1-\cos(\varphi)$',lw=2)
-r1=3*np.cos(fi)
-plt.polar(fi,r1,color='blue',label=r'$r=3\cos(\varphi)$',lw=2)
-fi_circle=np.linspace(np.pi/3,5*np.pi/3,1000)
-r_circle=3*np.cos(fi_circle)
-plt.fill_between(fi_circle,0,r_circle,color='orange')
-fi_cardioid=np.linspace(-np.pi/3,np.pi/3,1000)
-r_cardioid=1+np.cos(fi_cardioid)
-plt.fill_between(fi_cardioid,0,r_cardioid,color='orange')
+x = np.linspace(0, 10, num=11)
+y = np.cos(-x**2 / 9.0)
 
+xnew = np.linspace(0, 10, num=1001)
+ynew = np.interp(xnew, x, y)
 
-plt.text(0,1,"D", fontsize=12)
-plt.title('3')
-plt.ylim(bottom=0)
-plt.legend(loc=2, prop={'size':12})
-ax = plt.gca()
-ax.set_rgrids([i for i in range(4)])
-ax.set_rlabel_position(210)
-\end{lstlisting}
-
-
-\end{section}
-
-\\
-\includegraphics[width=0.8\linewidth]{graphic3.png}
-
-
-
-
-\newpage
-\begin{section}{Задача}\\
-
-Вычислить длину дуги кривой $y=\frac{x^2}{8}-\ln(x)$. 
-\\
-\begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-x=np.linspace(1,2,1000)
-y=x*x/8-np.log(x)
-plt.plot(x,y,lw=2,color='red',label=r'$y=\frac{x^2}{8}-\ln(x)$')
-
-
-formatter = ticker.ScalarFormatter(useMathText=True)
-formatter.set_scientific(True) 
-formatter.set_powerlimits((0,10)) 
-ax.yaxis.set_major_formatter(formatter) 
-
-ax=plt.gca()
-ax.yaxis.set_major_formatter(formatter)
-
-plt.legend(prop={'size':12})
-plt.grid()
-plt.title('4')
-plt.xlabel('x')
-plt.ylabel('y')
-
-\end{lstlisting}
-
-
-\end{section}
-
-\\
-\includegraphics[width=0.8\linewidth]{graphic4.png}
-
-
-
-
-
-\newpage
-\begin{section}{Задача}\\
-
-Вычислить площадь поверхности, полученной при вращении
-окружности $x^2+(y-4)^2=1$ вокруг оси $OX$.
-\\
-\begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-
-
-
-x=np.linspace(-1,1,1000)
-y=4+np.sqrt(1-np.square(x))
-plt.plot(x,y,color='red',lw=2,label=r'$x^2+(y-4)^2=1$')
-y1=4-np.sqrt(1-np.square(x))
-plt.plot(x,y1,color='red',lw=2)
-plt.fill_between(x,y1,y,color='yellow')
-
-
-plt.text(0,4,"D", fontsize=12)
-plt.legend(loc=3, prop={'size':12})
-plt.grid()
-plt.title('5')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.xlim(-3,3)
-plt.ylim(0,6)
-
-\end{lstlisting}
-
-
-\end{section}
-
-\\
-\includegraphics[width=0.8\linewidth]{graphic5.png}
-
-
-
-
-\newpage
-\begin{section}{Задача}\\
-
-Исследовать несобственный интеграл на сходимость.\\ \\
-$\int_{0}^{+\infty}\frac{1-\cos(x^2+x)}{\sqrt{x^5}}\,dx$
-\\
-\begin{lstlisting}[language=Python]
-plt.figure(figsize=(5,5))
-
-x=np.linspace(0.01,10,1000)
-y=(1-np.cos(x*x+x))/np.sqrt(x**5)
-plt.plot(x,y,color="red",lw=2,label=r'$y=\frac{1-\cos(x^2+x)}{\sqrt{x^5}}$')
-x1=np.linspace(0.2,10,1000)
-y1=1/x1
-plt.plot(x1,y1,color="blue",lw=2,label=r'$y=\frac{1}{x}}$')
-
-
-plt.legend(prop ={ 'size' :12})
-plt.grid()
-plt.title('6')
-plt.xlabel('x')
-plt.ylabel('y')
-
+plt.plot(xnew, ynew, '-', label='linear interp')
+plt.plot(x, y, 'o', label='data')
+plt.legend(loc='best')
 plt.show()
 \end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{interpol1.png}
+\\
+Конечно, кусочно-линейная интерполяция создает углы в точках данных, где соединяются линейные фрагменты. Для создания более плавной кривой можно использовать кубические сплайны, где интерполирующая кривая состоит из кубических фрагментов с соответствующими первой и второй производными. В коде эти объекты представлены через \textbf{CubicSpline} экземпляры класса. Экземпляр создается с использованием $x$ и $y$ массивов данных, а затем его можно оценить, используя целевые $xnew$ значения:
+\\
+\begin{lstlisting}[language=Python]
+from scipy.interpolate import CubicSpline
+x = np.linspace(0, 10, num=11)
+y = np.cos(-x**2 / 9.)
+spl = CubicSpline(x, y)
+fig, ax = plt.subplots(4, 1, figsize=(5, 7))
+xnew = np.linspace(0, 10, num=1001)
+ax[0].plot(xnew, spl(xnew))
+ax[0].plot(x, y, 'o', label='data')
+ax[1].plot(xnew, spl(xnew, nu=1), '--', label='1st derivative')
+ax[2].plot(xnew, spl(xnew, nu=2), '--', label='2nd derivative')
+ax[3].plot(xnew, spl(xnew, nu=3), '--', label='3rd derivative')
+for j in range(4):
+    ax[j].legend(loc='best')
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{interpol2.png}
+\end{section}
+\\
+\begin{section}{Оптимизация}
+\textbf{scipy.optimize} предстявляет набор функций, которые реализуют популярные алгоритмы оптимизаци: 
+\begin{itemize}
+    \item Неограниченная и ограниченная минимизация многомерных скалярных функций (например, Алгоритм Бройдена — Флетчера — Гольдфарба — Шанно, метод сопряженных градиентов, метод Нелдера — Мида).
+    \item Глобальная оптимизация (дифференциальная эволюция, двойной отжиг и т. д.).
+    \item Минимизация наименьших квадратов и подбор кривой (метод наименьших квадратов, приближение с помощью кривых);
+    \item Минимизаторы скалярных одномерных функций и численное решение уравнений.
+    \item Функции для решения систем многомерных уравнений с помощью таких алгоритмов, как Пауэлла, Левендберга — Марквардта и ещё куча всего.
+\end{itemize}
+\\
+Пусть у нас есть функция $f(x)=x^2+10\sin(x)$. Найдём её минимум. Можно использовать алгоритм поиска методом перебора, который будет оценивать каждую точку в сетке диапазонов. Если область определения функции достаточно большая, то \textbf{brute()} становится очень медленным. Можно взять функцию \textbf{scipy.optimize.anneal()}
+\\
+\begin{lstlisting}[language=Python]
+from scipy import optimize
 
+def target_function(x):
+    return x ** 2+10*np.sin(x)
+ 
+plt.figure(figsize=(5,5))
+x = np.linspace(-10, 10, 1000)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('optimize')
+plt.plot(x, target_function(x),  label=r'$f(x)=x^2+10\sin(x)$')
+
+
+grid = (-10, 10)
+xmin_global = optimize.brute(target_function, (grid,))
+print(xmin_global)
+
+a = target_function(xmin_global)
+plt.plot(xmin_global, a, 'o', label='min')
+plt.legend()
+plt.grid()
+plt.show()
+
+>>[-1.30640933]
+\end{lstlisting}
+\includegraphics[width=0.8\linewidth]{optimum1.png}
+\\
+На последок посомтрим на поиск корней. Для нахождения кореней уравнений используется функция scipy.optimize.root(fun, x0, args=(), method, ..., где:
+\begin{itemize}
+    \item fun - целевая функция.
+    \item x0 - начальное.
+    \item args - дополнительные аргументы, которые передаются целевой функции и ее якобиану.
+    \item method - метод решения.
+\end{itemize}
+\\
+Решим уравнение $x^2-2\cos(x)=0$ с начальным значением $x_0=0.3$.
+\\
+\begin{lstlisting}[language=Python]
+from scipy.optimize import root
+
+def target_function(x):
+   return x ** 2 - 2 * np.cos(x)
+
+x0 = 0.3
+x_root=root(target_function, x0).x
+print(x_root)
+
+plt.figure(figsize=(5,5))
+x = np.linspace(-2, 2, 100)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.plot(x, target_function(x),  label=r'$f(x)=x^2-2\cos(x)$')
+plt.plot(x_root, target_function(x_root), 'o', label='root')
+plt.legend()
+plt.grid()
+plt.show()
+
+>>[1.02168995]
+\end{lstlisting}
+\includegraphics[width=0.8\linewidth]{optimum2.png}
 
 \end{section}
-
-\\
-\includegraphics[width=0.8\linewidth]{graphic6.png}
-
-
-
 \end{document}
