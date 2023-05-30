@@ -23,6 +23,20 @@
 
 
 
+\documentclass{article}
+\usepackage{ucs}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\author{Гвоздев П.А.}
+\title{Отчёт "Визуализация данных"}
+\date{ФН1-21Б}
+
+
+
 \usepackage{xcolor}
 
 %New colors defined below
@@ -50,84 +64,151 @@
   \lstset{style=mystyle}
 
 
+
 \begin{document}
 \maketitle
 \newpage
-SciPy - это набор математических алгоритмов и удобных функций, построенный на расширении Python NumPy.\\
-SciPy организован в подпакеты, охватывающие различные области научных вычислений. Они обобщены в следующей таблице:
+ Для обработки я выбрал датасэт на тему заработных плат "Salary Data", включающий в себя
+    такие данные как:\\
+    Возраст, пол, уровень образования, профессия, опыт работы, заработная плата.
 \\
-\begin{center}
-\begin{tabular}{ |c|c| } 
- \hline
- \textbf{Подпакет} & \textbf{Описание}  \\
- \hline
- \hline
- cluster & Алгоритмы кластеризации  \\ 
-  \hline
- constants & Физические и математические константы  \\ 
-  \hline
- fftpack &  Процедуры быстрого преобразования Фурье \\ 
-  \hline
- integrate & Решатели интегрирования и обыкновенных дифференциальных уравнений  \\ 
-  \hline
- interpolate & Интерполяция и сглаживание сплайнов  \\ 
-  \hline
- io & Ввод и вывод  \\ 
-  \hline
- linalg & Линейная алгебра \\ 
-  \hline
- ndimage & Обработка N-мерных изображений \\ 
-  \hline
- odr & Регрессия ортогонального расстояния  \\ 
-  \hline
- optimize & Процедуры оптимизации и поиска корня  \\ 
-  \hline
- signal & Обработка сигналов  \\ 
-  \hline
- sparse & Разреженные матрицы и связанные с ними подпрограммы  \\ 
-  \hline
- spatial & Пространственные структуры данных и алгоритмы  \\ 
-  \hline
- special & Специальные функции  \\ 
-  \hline
- stats & Статистические распределения и функции \\ 
- \hline
-\end{tabular}
-\end{center}
-\\
-Далее рассмотрим некоторые из них.
-\begin{section}{Integrate}
-Подпакет предоставляет несколько методов интегрирования, включая интегратор обыкновенных дифференциальных уравнений. Возвращаемое значение большинства функций представляет собой кортеж, в котором первый элемент содержит оценочное значение интеграла, а второй элемент содержит верхнюю границу ошибки.\\
-Функция quad предназначена для интеграции функции одной переменной на заданном отрезке. Например, предположим, что вы хотите вычислить вот такой интеграл.
-\begin{align*}
-I(a,b)=\int_{0}^{1} ax^2+b \,dx
-\end{align*}  
-\\Вычислим значение этой функции в точке (2 ; 1).
+Импортируем необходимые библиотеки, удалим лишнее, исправим опечатку, устанавливаем тему для графиков.
 \begin{lstlisting}[language=Python]
-from scipy.integrate import quad
-def integrand(x, a, b):
-    return a*x**2 + b
-a = 2
-b = 1
-I = quad(integrand, 0, 1,args=(a,b))
-I
->>(1.6666666666666667, 1.8503717077085944e-14)
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import seaborn as sns
+
+df=pd.read_csv('Salary_Data.csv')
+df.dropna(inplace=True)
+df.drop(df.index[df['Gender']=='Other'],inplace=True)
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace('phD','PhD'))
+sns.set_theme()
 \end{lstlisting}
-Механизмы взятия двойных и тройных интегралов были объединены в функции dblquad и tplquad. Эти функции используют функцию для интегрирования и четыре или шесть аргументов соответственно. Пределы всех внутренних интегралов должны быть определены как функции.
-В качестве примера для непостоянных пределов рассмотрим интеграл
-\begin{align*}
-I=\int_{0}^{1}\,dy\int_{1-3y}^{1+2y} x^2y \,dx  
-\end{align*}
-\end{section}
- Его можно вычислить так:
- \\
- \begin{lstlisting}[language=Python]
-from scipy.integrate import dblquad
-I = dblquad(lambda x, y: x**2*y, 0, 1, lambda y: 1-3*y, lambda y : 1+2*y)
-I
->>(2.75, 1.2852467283249305e-13)
+\\
+Далее построим график распределения заработной платы в зависимости от опыта работы.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.scatterplot(df,x='Years of Experience',y='Salary')
+plt.show()
 \end{lstlisting}
-\end{document}
+\\
+\includegraphics[width=0.8\linewidth]{graph1.png}
+\\
+
+
+\\
+График зависимости заработной платы от возраста.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.lineplot(df,x='Age',y='Salary')
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph2.png}
+\newpage
+\\
+Построим график распределения зарплат по уровням образования.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.stripplot(df,y='Education Level',x='Salary')
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph3.png}
+
+\\
+Построим столбчатую диаграмму суммы зарплат всех специалистов с одним и тем же уровнем образования. Так как наименования столбцов не влазят сократим их названия.
+\\
+\begin{lstlisting}[language=Python]
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace('High School','School'))
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace("Master's Degree",'Master D'))
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace("Master's",'Master'))
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace("Bachelor's Degree",'Bach D'))
+df['Education Level']=df['Education Level'].apply(lambda x: x.replace("Bachelor's",'Bachelor'))
+
+
+plt.figure(figsize=(5,5))
+sns.barplot(df,x='Education Level',y='Salary')
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph4.png}
+\newpage
+\\
+Построим столбчатую диаграмму количества специалистов различных уровней образования.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.countplot(df,x='Education Level')
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph5.png}
+
+\\
+\newpage
+Построим pairplot по гендерам.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.pairplot(df,hue='Gender')
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph6.png}
+
+\\
+\newpage
+Построим график эмпирической кумулятивной функции распределения опыта работы.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.ecdfplot(data=df, x="Years of Experience")
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph7.png}
+
+\newpage
+\\
+Построим усиковую диаграмму распределения зарплаты по уровням образования.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.boxplot(x='Education Level', y='Salary', data=df)
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph8.png}
+\newpage
+\\
+Построим графики распределения зарплат в зависимости от пола и уровня образования.
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+sns.violinplot(x=df['Education Level'], y=df['Salary'],
+               hue=df['Gender'], split=True)
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph9.png}
+
+\\
+\newpage
+Построим histplot для самой популярной профессии- "Data Analyst".
+\\
+\begin{lstlisting}[language=Python]
+plt.figure(figsize=(5,5))
+df1=df[df['Job Title']=='Data Analyst']
+sns.histplot(df1['Age'], kde=True, stat='count')
+plt.show()
+\end{lstlisting}
+\\
+\includegraphics[width=0.8\linewidth]{graph10.png}
 
 
 \end{document}
